@@ -4,24 +4,26 @@ import { fetchUsers } from '../../redux';
 
 function UserContainer({userData, fetchUsers}) {
 
+    // console.log("fetchUsers", fetchUsers);
+
     useEffect(() => {
         fetchUsers();
-    })
+    }, [])
     return (
         <div>
             <h1>UserContainer</h1>
             {
-                userData.loading ? (
-                    <h2>loading</h2>
-                ) : userData.error ? (
-                    <h2>userData.error</h2>
-                ) : (
-                    <div>
-                        {
+                // userData.loading ? (
+                //     <h2>loading</h2>
+                // ) : userData.error ? (
+                //     <h2>userData.error</h2>
+                // ) : (
+                //     <div>
+                //         {
                             userData && userData.users && userData.users.map(user => <p>{user.name}</p>)
-                        }
-                    </div>
-                )
+                //         }
+                //     </div>
+                // )
             }
         </div>
     )

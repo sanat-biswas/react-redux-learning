@@ -8,9 +8,9 @@ function App() {
   return (
     <Provider store={store}>
 
-    <div className="App">
-      <UserContainer />
-    </div>
+      <div className="App">
+        <UserContainer />
+      </div>
     </Provider>
   );
 }
