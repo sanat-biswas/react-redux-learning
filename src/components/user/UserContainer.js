@@ -1,45 +1,57 @@
 import React, { useEffect } from 'react';
-import {connect} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { fetchUsers } from '../../redux';
+import AddUser from './AddUser';
 
-function UserContainer({userData, fetchUsers}) {
+function UserContainer() {
 
-    // console.log("fetchUsers", fetchUsers);
+    const users = useSelector(state => state.user)
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        fetchUsers();
+        dispatch(fetchUsers());
     }, [])
     return (
-        <div>
-            <h1>UserContainer</h1>
-            {
-                // userData.loading ? (
-                //     <h2>loading</h2>
-                // ) : userData.error ? (
-                //     <h2>userData.error</h2>
-                // ) : (
-                //     <div>
-                //         {
-                            userData && userData.users && userData.users.map(user => <p>{user.name}</p>)
-                //         }
-                //     </div>
-                // )
-            }
+        <div className='container-fluid'>
+            <div className='row'>
+                <div className='col-md-8 offset-2'>
+
+                    <h1 className='text-success'>UserContainer</h1>
+                    <AddUser />
+                    {
+                        users.loading ? (
+                            <h2>loading</h2>
+                        ) : users.error ? (
+                            <h2>users.error</h2>
+                        ) : (
+                            <table className='table table-responsive'>
+                                <thead className='table-dark'>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        users && users.users && users.users.map((user) => (
+                                            <tr key={user.id}>
+                                                <td>{user.name}</td>
+                                                <td>{user.email}</td>
+                                                <td><button className='btn btn-primary'>Edit</button></td>
+                                                <td><button className='btn btn-danger'>Delete</button></td>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
+                        )
+                    }
+                </div>
+            </div>
         </div>
     )
 }
 
-const mapStateToProps = (state) => {
-
-    return {
-        userData: state.user
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchUsers: () => dispatch(fetchUsers())
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserContainer);
+export default UserContainer;
