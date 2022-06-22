@@ -1,5 +1,18 @@
 import axios from "axios";
-import { CREATE_USER_FAILURE, CREATE_USER_REQUEST, CREATE_USER_SUCCESS, FETCH_USER_FAILURE, FETCH_USER_REQUEST, FETCH_USER_SUCCESS } from "./userTypes";
+import {
+    CREATE_USER_FAILURE,
+    CREATE_USER_REQUEST,
+    CREATE_USER_SUCCESS,
+    DELETE_USER_FAILURE,
+    DELETE_USER_REQUEST,
+    DELETE_USER_SUCCESS,
+    FETCH_USER_FAILURE,
+    FETCH_USER_REQUEST,
+    FETCH_USER_SUCCESS,
+    UPDATE_USER_FAILURE,
+    UPDATE_USER_REQUEST,
+    UPDATE_USER_SUCCESS
+} from "./userTypes";
 
 //for fetching the users from the database
 export const fetchUsersRequest = () => {
@@ -43,6 +56,49 @@ export const createUserFailure = (error) => {
     }
 }
 
+//for updating the users
+export const updateUserRequest = () => {
+    return {
+        type: UPDATE_USER_REQUEST
+    }
+}
+
+export const updateUserSuccess = (user) => {
+    return {
+        type: UPDATE_USER_SUCCESS,
+        payload: user
+    }
+}
+
+export const updateUserFailure = (error) => {
+    return {
+        type: UPDATE_USER_FAILURE,
+        payload: error
+    }
+}
+
+export const deleteUserRequest = () => {
+    return {
+        type: DELETE_USER_REQUEST,
+    }
+}
+
+export const deleteUserSuccess = (user) => {
+    return {
+        type: DELETE_USER_SUCCESS,
+        payload: user
+    }
+}
+
+export const deleteUserFailure = (error) => {
+    return {
+        type: DELETE_USER_FAILURE,
+        payload: error
+    }
+}
+
+
+//for fetching the user information
 export const fetchUsers = () => {
     return (dispatch) => {
         dispatch(fetchUsersRequest);
@@ -56,8 +112,9 @@ export const fetchUsers = () => {
     }
 }
 
+//for creating new users
 export const createUser = (user) => {
-    
+
     return (dispatch) => {
         dispatch(createUsersRequest());
         axios.post('http://localhost:8000/api/users', user).then(response => {
@@ -66,6 +123,34 @@ export const createUser = (user) => {
         }).catch(error => {
             console.log("error", error);
             dispatch(createUserFailure(error));
+        })
+    }
+}
+
+//for updating the user data
+export const updateUsers = (user) => {
+
+    return (dispatch) => {
+        dispatch(updateUserRequest());
+
+        axios.put('http://localhost:8000/api/users/' + user.id, user)
+            .then(response => {
+                dispatch(updateUserSuccess(user));
+            }).catch(error => {
+                dispatch(updateUserFailure(error));
+            })
+    }
+}
+
+export const deleteUser = (index) => {
+    return (dispatch) => {
+        dispatch(deleteUserRequest)
+        axios.delete('http://localhost:8000/api/users/'+index).then(response => {
+
+        console.log("response", response);
+            dispatch(deleteUserSuccess(index));
+        }).catch(error => {
+            dispatch(deleteUserFailure(error));
         })
     }
 }

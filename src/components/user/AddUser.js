@@ -17,6 +17,7 @@ function AddUser() {
 
      const handleSubmit = () => {
         dispatch(createUser(user));
+        handleClose();
     }
 
     return (
@@ -25,7 +26,7 @@ function AddUser() {
                 Add User
             </Button>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} backdrop="static">
                 <Modal.Header closeButton>
                     <Modal.Title>Add User</Modal.Title>
                 </Modal.Header>

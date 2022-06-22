@@ -1,12 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUsers } from '../../redux';
+import { deleteUser, fetchUsers } from '../../redux';
 import AddUser from './AddUser';
+import {Button} from 'react-bootstrap';
+import EditUser from './EditUser';
 
 function UserContainer() {
 
     const users = useSelector(state => state.user)
+
     const dispatch = useDispatch();
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+
+    const [user, setUser] = useState();
+
+    const handleUpdateUser = (user) => {
+        setUser(user);
+        setShow(true);
+    }
 
     useEffect(() => {
         dispatch(fetchUsers());
@@ -22,7 +36,7 @@ function UserContainer() {
                         users.loading ? (
                             <h2>loading</h2>
                         ) : users.error ? (
-                            <h2>users.error</h2>
+                            <h2>{users.error}</h2>
                         ) : (
                             <table className='table table-responsive'>
                                 <thead className='table-dark'>
@@ -35,12 +49,17 @@ function UserContainer() {
                                 </thead>
                                 <tbody>
                                     {
-                                        users && users.users && users.users.map((user) => (
+                                        users && users.users && users.users.sort((user1, user2) => user1.id - user2.id).map((user) => (
+                                            
                                             <tr key={user.id}>
                                                 <td>{user.name}</td>
                                                 <td>{user.email}</td>
-                                                <td><button className='btn btn-primary'>Edit</button></td>
-                                                <td><button className='btn btn-danger'>Delete</button></td>
+                                                <td>
+                                                    <Button variant="primary" onClick={() => handleUpdateUser(user)} >
+                                                    Edit User
+                                                    </Button>
+                                                </td>
+                                                <td><Button variant='danger' onClick={() => dispatch(deleteUser(user.id))}>Delete</Button></td>
                                             </tr>
                                         ))
                                     }
@@ -49,7 +68,9 @@ function UserContainer() {
                         )
                     }
                 </div>
+
             </div>
+                <EditUser handleEdit={show} handleClose={handleClose} updateUser={user} setUser={setUser}/>
         </div>
     )
 }
